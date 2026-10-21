@@ -1,0 +1,134 @@
+:root {
+  color-scheme: light dark;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  background: Canvas;
+  color: CanvasText;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+h1 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+h2 {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+
+#meta,
+#status,
+.field span,
+.kind {
+  color: GrayText;
+  font-size: 12px;
+}
+
+#status:empty {
+  display: none;
+}
+
+.actions,
+.row,
+.sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+button,
+select,
+input {
+  font: inherit;
+  color: CanvasText;
+  background: Canvas;
+  border: 1px solid GrayText;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+button {
+  background: ButtonFace;
+  color: ButtonText;
+  cursor: pointer;
+}
+
+article {
+  padding: 14px 0;
+  border-top: 1px solid GrayText;
+}
+
+article p {
+  margin: 0 0 8px;
+}
+
+.kind {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.field {
+  margin-bottom: 10px;
+}
+
+.field span {
+  display: block;
+}
+
+#settings-view {
+  border-top: 1px solid GrayText;
+  padding-top: 12px;
+}
+
+label {
+  display: block;
+  margin: 10px 0;
+}
+
+label em {
+  display: block;
+  font-style: normal;
+  font-size: 12px;
+  color: GrayText;
+  margin-bottom: 4px;
+}
+
+input[type="text"],
+input[type="password"],
+select {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.keys {
+  display: grid;
+  gap: 8px;
+}
+
+.key-row {
+  display: grid;
+  grid-template-columns: 72px 1fr auto auto;
+  gap: 6px;
+  align-items: center;
+}
+
+@media (max-width: 420px) {
+  .key-row {
+    grid-template-columns: 1fr;
+  }
+}

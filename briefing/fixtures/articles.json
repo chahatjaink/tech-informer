@@ -1,0 +1,34 @@
+[
+  {
+    "title": "Disaggregating prefill and decode",
+    "url": "https://arxiv.org/abs/2401.09670",
+    "kind": "paper",
+    "source_type": "fixture",
+    "published_at": "2024-01-18",
+    "text": "# Placement\n\nPrefill is bursty and compute-bound. Decode is resident and memory-bandwidth-bound. Placing both phases on one GPU pool sizes the device for the heavier phase and leaves the other idle. A kv-cache disaggregation design puts the phases on separate pools that share a transfer path.\n\n# Failure\n\nThe transfer is the failure boundary. If the kv-cache move is synchronous with the first decode token, time-to-first-token picks up a network round trip, and a slow prefill worker stalls decode slots it does not own. Backpressure has to run from decode memory into the prefill admission gate. The goodput delta versus a colocated pool was not reported in this note.\n\n# What to copy\n\nCopy the split only with an explicit admission rule. Do not scale the pools on the same signal."
+  },
+  {
+    "title": "Phase-split inference pools",
+    "url": "https://www.microsoft.com/en-us/research/blog/splitwise-improves-gpu-usage-by-splitting-llm-inference-phases/",
+    "kind": "blog",
+    "source_type": "fixture",
+    "published_at": "2024-05-20",
+    "text": "# Split\n\nSplitwise separates the prompt phase from the token phase so each pool can be scaled on its own bottleneck. Prefill traffic is spiky. Decode holds the kv-cache for the life of the request. Mixing them on one replica couples a short compute burst to a long memory residency.\n\n# Transfer and admission\n\nThe kv-cache disaggregation path is only a win when decode can refuse work before prefill accepts it. Without that backpressure, a transfer storm fills decode memory and the router keeps admitting prompts. The capacity model should treat the two pools as one queueing network, not two independent autoscalers."
+  },
+  {
+    "title": "Logical decoding is the durability boundary",
+    "url": "https://www.postgresql.org/docs/current/logicaldecoding.html",
+    "kind": "docs",
+    "source_type": "fixture",
+    "published_at": "2026-01-01",
+    "text": "# Slot\n\nA logical decoding consumer must treat the replication slot and the confirmed flush LSN as its durability boundary. The slot retains WAL until the consumer confirms it. Acknowledging on receive lets a crash drop events that Postgres has already discarded.\n\n# Restart\n\nRestart from the last confirmed flush LSN. A snapshot taken under a different slot timeline is not a substitute. Raising max_replication_slots does not recreate WAL the slot has already released. The maximum safe slot lag for a given workload was not reported here."
+  },
+  {
+    "title": "Confirm the flush LSN after the consumer commit",
+    "url": "https://www.postgresql.org/docs/current/logical-replication.html",
+    "kind": "docs",
+    "source_type": "fixture",
+    "published_at": "2026-01-01",
+    "text": "# Confirm\n\nLogical decoding only lets the replication slot advance to the confirmed flush LSN. The consumer should send that confirmation after its own transaction commits, not when the message arrives on the socket.\n\n# Lag\n\nSlot lag is retained WAL, which is disk on the primary, not a consumer-side buffer. An unbounded consumer outage becomes a primary disk incident. Page the on-call on slot lag, and block schema changes that the downstream decoder cannot represent. The safe lag threshold was not reported in this note."
+  }
+]

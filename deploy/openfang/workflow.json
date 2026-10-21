@@ -1,0 +1,16 @@
+{
+  "name": "senior-brief-daily",
+  "description": "Ingest the allowlist and publish one edition for the Chrome side panel.",
+  "steps": [
+    {
+      "name": "publish-edition",
+      "agent_name": "brief-api",
+      "prompt": "Run the daily brief job.",
+      "mode": "sequential",
+      "timeout_secs": 900,
+      "error_mode": "retry",
+      "max_retries": 2,
+      "output_var": "edition"
+    }
+  ]
+}

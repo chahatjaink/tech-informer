@@ -1,0 +1,11 @@
+{
+  "name": "senior-brief-extension",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p src/tsconfig.json"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.287",
+    "typescript": "^5.6.3"
+  }
+}

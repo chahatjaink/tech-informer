@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Senior Brief</title>
+    <link rel="stylesheet" href="sidepanel.css" />
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>Senior Brief</h1>
+        <p id="meta"></p>
+      </div>
+      <div class="actions">
+        <button id="fetch-latest" type="button">Fetch latest</button>
+        <button id="refresh" type="button">Refresh</button>
+        <button id="settings" type="button">Settings</button>
+      </div>
+    </header>
+    <p id="status" role="status"></p>
+    <section id="settings-view" hidden></section>
+    <main id="brief"></main>
+    <script type="module" src="dist/sidepanel.js"></script>
+  </body>
+</html>

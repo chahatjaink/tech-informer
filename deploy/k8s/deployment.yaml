@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: senior-brief
+  namespace: briefing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: senior-brief
+  template:
+    metadata:
+      labels:
+        app: senior-brief
+    spec:
+      containers:
+        - name: api
+          image: senior-brief:0.1.0
+          ports:
+            - containerPort: 8787
+          env:
+            - name: BRIEF_ROOT
+              value: /app
+            - name: BRIEF_AUTH
+              value: google
+            - name: BRIEF_ALLOWED_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: senior-brief
+                  key: allowed-email
+            - name: BRIEF_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: senior-brief
+                  key: master-key
+            - name: BRIEF_DATA_DIR
+              value: /data
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8787
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: senior-brief-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: senior-brief
+  namespace: briefing
+spec:
+  selector:
+    app: senior-brief
+  ports:
+    - port: 80
+      targetPort: 8787
