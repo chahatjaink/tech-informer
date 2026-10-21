@@ -12,20 +12,25 @@ async function config() {
     };
 }
 export async function refreshEdition() {
-    const { apiBase, apiToken, etag } = await config();
-    const headers = { Authorization: "Bearer " + apiToken };
-    if (etag)
-        headers["If-None-Match"] = etag;
-    const response = await fetch(apiBase.replace(/\/$/, "") + "/v1/editions/latest", { headers });
-    if (response.status === 304)
-        return;
-    if (!response.ok)
-        return;
-    const edition = await response.json();
-    await chrome.storage.local.set({
-        edition,
-        etag: response.headers.get("ETag"),
-    });
+    try {
+        const { apiBase, apiToken, etag } = await config();
+        const headers = { Authorization: "Bearer " + apiToken };
+        if (etag)
+            headers["If-None-Match"] = etag;
+        const response = await fetch(apiBase.replace(/\/$/, "") + "/v1/editions/latest", { headers });
+        if (response.status === 304)
+            return;
+        if (!response.ok)
+            return;
+        const edition = await response.json();
+        await chrome.storage.local.set({
+            edition,
+            etag: response.headers.get("ETag"),
+        });
+    }
+    catch {
+        // The local API is down. The alarm retries; the side panel reports the error.
+    }
 }
 async function badge(tabId, tabUrl) {
     if (tabId === undefined)
